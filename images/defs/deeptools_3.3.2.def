@@ -1,0 +1,12 @@
+==deffile==
+Bootstrap: docker
+
+From: continuumio/miniconda3
+
+%post
+	export PATH="/opt/conda/bin:$PATH"
+	conda install -c bioconda deeptools
+	
+%runscript
+	"$@"
+

@@ -1,0 +1,11 @@
+==deffile==
+Bootstrap: docker
+
+From: python:3.8
+
+%post
+wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1eIX2I9m4kgq-xW6wHbmoLDqUaDocLHrj' -O LogParser.py
+
+%runscript
+python /LogParser.py
+

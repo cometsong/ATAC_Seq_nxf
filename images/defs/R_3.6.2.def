@@ -1,0 +1,11 @@
+==deffile==
+Bootstrap: docker
+
+From: r-base
+
+%post
+	R --slave -e 'install.packages("ggplot2")'
+	
+%runscript
+	/usr/bin/Rscript "$@"
+

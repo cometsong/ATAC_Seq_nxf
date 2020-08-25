@@ -1,0 +1,14 @@
+==deffile==
+Bootstrap: docker
+
+From: python:3
+
+%post
+	pip install -U pip
+	pip install wheel
+	pip install numpy
+	pip install MACS2
+
+%runscript
+        macs2 "$@"
+

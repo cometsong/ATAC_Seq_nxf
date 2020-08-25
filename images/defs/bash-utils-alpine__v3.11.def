@@ -1,0 +1,24 @@
+==deffile==
+Bootstrap: library
+From: alpine:latest
+
+%help
+    Base bash environment with utils: gawk, grep, sed, bc.
+
+%labels
+    App 'bash' with utils: gawk, grep, sed, bc.
+    Author benjamin@cometsong.net
+
+%post
+    apk add --no-cache \
+        bash \
+        grep \
+        gawk \
+        sed \
+        bc
+
+%runscript
+    "$@"
+
+/* vim: set ft=singularity ts=4 sw=0 tw=100 et: */
+

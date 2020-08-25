@@ -1,0 +1,36 @@
+==deffile==
+Bootstrap: library
+From: alpine:3.11
+
+%labels
+    AppName bedtools (w/ utils: bash, awk, grep)
+    AppVersion v2.29.2 (w/ utils)
+    Author bleopold@jax.org
+
+%post
+    bedtools_VER='v2.29.2'
+    bedtools_URL="https://github.com/arq5x/bedtools2/releases/download/${bedtools_VER}/bedtools.static.binary"
+
+    apk add --no-cache \
+        wget bash grep gawk \
+    \
+    && wget -q -O bedtools ${bedtools_URL} \
+    && chmod a+x bedtools \
+    && mv bedtools /usr/bin/bedtools \
+    \
+    && apk del wget
+
+%test
+    echo "Testing apps presence..."
+    for cmd in \
+        bedtools \
+        bash \
+        awk \
+        grep \
+        ; do
+        command -v ${cmd} && echo "Command: '${cmd}' is found."
+    done
+
+%runscript
+    bedtools "$@"
+

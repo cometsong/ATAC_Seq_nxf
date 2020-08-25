@@ -1,0 +1,42 @@
+==deffile==
+Bootstrap: library
+From: alpine:3.11
+
+%labels
+    Author bleopold@jax.org
+    Version v0.0.1
+    MyLabel Hello World
+
+%post 
+    samtools_VER='1.3.1'
+    samtools_URL="https://github.com/samtools/samtools/releases/download/${samtools_VER}/samtools-${samtools_VER}.tar.bz2"
+
+    apk add --no-cache \
+        build-base zlib-dev bzip2-dev xz-dev ncurses-dev ca-certificates wget \
+        grep gawk bc bash \
+    \
+    && wget -q ${samtools_URL} \
+    && tar xjvf samtools-${samtools_VER}.tar.bz2 \
+    && cd /samtools-${samtools_VER}/ \
+    && make \
+    && mv /samtools-${samtools_VER}/samtools /usr/bin/ \
+    && rm -rf /samtools* \
+    \
+    && apk del build-base zlib-dev ca-certificates wget
+
+%test
+    echo "Testing apps presence..."
+    for cmd in \
+        samtools \
+        awk \
+        grep \
+        bc \
+        bash \
+        ; do
+        command -v ${cmd} && echo "Command: '${cmd}' is found."
+    done
+
+%runscript
+    samtools "$@"
+
+

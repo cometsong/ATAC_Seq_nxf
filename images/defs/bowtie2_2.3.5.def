@@ -1,0 +1,15 @@
+==deffile==
+Bootstrap: docker
+
+From: continuumio/miniconda3
+
+%environment
+    PATH=/opt/conda/bin
+
+%post
+	export PATH="/opt/conda/bin:$PATH"
+	conda install -c bioconda bowtie2
+	
+%runscript
+	/opt/conda/bin/bowtie2 "$@"
+
