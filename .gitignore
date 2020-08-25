@@ -1,0 +1,11 @@
+!bin/
+!lib/
+nextflow
+.nextflow*
+*.log
+*.sif
+tests/
+work/
+tmp/
+.DS_Store
+*.sw[a-p]
