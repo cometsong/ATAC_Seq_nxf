@@ -522,7 +522,9 @@ process chain_extract_badreads_b6 {
     tag "$sampleID"
     label 'gatk'
     publishDir "${sample_outdir}", pattern: "*.log", mode: 'copy'
-    validExitStatus 0,3,4 //,o,t,h,e,r,s?
+
+    //validExitStatus 0,3,4 //,o,t,h,e,r,s?
+    errorStrategy { [0,3,4].contains(task.exitStatus) ? 'ignore' : 'terminate' } //!validExitStatus
 
     input:
     tuple sampleID, file(bam_sort_mm10) from bams_sort_mm10_extract_ch
