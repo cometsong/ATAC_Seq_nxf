@@ -893,7 +893,7 @@ process frag_len_plot {
     script:
     log.info "-----Fragment Length Plot on ${sampleID}-----"
     """
-    Rscript ${projectDir}/bin/fragment_length_plot.R ${frag_len_count}
+    Rscript ${workflow.projectDir}/bin/fragment_length_plot.R ${frag_len_count}
     """
 }
 
