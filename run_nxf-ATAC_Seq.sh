@@ -19,6 +19,10 @@ has-cmd() { command -v "${1}" &>/dev/null; }
 ( has-cmd singularity ) || module load singularity \
   || { echo "Can't find command 'singularity'" && exit 1; }
 
+##### Get Datestamps #########
+get_datestamp() { echo $(date +"${*:-"%Y-%m-%d %H:%M:%S"}"); } # from mbiome_utils.sh
+today() { echo $(get_datestamp "%Y%m%d"); }
+
 ##### ENV Setup ##############
 [ -n "${NXF_PIPES}" ] \
   || NXF_PIPES='/projects/${USER}/pipelines'
@@ -41,23 +45,29 @@ run_name="${workflow}-$(date +%6N)"
   && libdir="${NXF_PIPES}/lib" \
   || libdir="${workflow_path}/lib"
 
-##### work-dir Path ##########
+##### tempdir Path ###########
 # opt: tempdir="$PWD/${workflow,,}" # lowercase workflow name
 # opt: tempdir=$(mktemp -d -p $TMPDIR -q nxf.XXXXX 2>/dev/null)||tempdir=$PWD
 tempdir=$(mktemp -d -p /fastscratch -q nxf.XXXXX 2>/dev/null)||tempdir=$PWD
-workdir="${tempdir}/NXF_work-${workflow}"
 
-LOG="$PWD/nxf-${run_name}.log"
+##### work-dir Path ##########
+workdir="-work-dir ${tempdir}/NXF_work-${workflow}"
+### Check args for work-dir ###
+if [[ ${args[*]} =~ '-work-dir' ]] \
+|| [[ ${args[*]} =~ '-w' ]] ; then
+  workdir=''
+fi
+
+LOG="$PWD/nxf-$(today)-${run_name}.log"
 #########################
 ##   The Main Action!  ##
 nextflow                \
   -config ${params}     \
-  run                   \
-  ${workflow_path}      \
-  -name "${run_name}"   \
+  run ${workflow_path}  \
   -profile ${profiles}  \
-  -work-dir ${workdir}  \
   -lib ${libdir}        \
+  -name "${run_name}"   \
+  ${workdir}            \
   ${args[*]}            \
-| tee -a ${LOG}
+2>&1 | tee -a ${LOG}
 #########################
