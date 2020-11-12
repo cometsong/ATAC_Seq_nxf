@@ -16,8 +16,6 @@ has-cmd() { command -v "${1}" &>/dev/null; }
   || { echo "Can't find command 'nextflow'" && exit 1; }
 ( has-cmd sbatch ) || module load slurm \
   || { echo "Can't find commands for 'slurm'" && exit 1; }
-( has-cmd singularity ) || module load singularity \
-  || { echo "Can't find command 'singularity'" && exit 1; }
 
 ##### Get Datestamps #########
 get_datestamp() { echo $(date +"${*:-"%Y-%m-%d %H:%M:%S"}"); } # from mbiome_utils.sh
@@ -25,7 +23,7 @@ today() { echo $(get_datestamp "%Y%m%d"); }
 
 ##### ENV Setup ##############
 [ -n "${NXF_PIPES}" ] \
-  || NXF_PIPES='/projects/${USER}/pipelines'
+  || NXF_PIPES="/projects/${USER}/pipelines"
 
 #TODO: ¿workflow=${this_script//*-} from name after hyphen?
 #this_script=$(basename ${BASH_SOURCE[0]})
