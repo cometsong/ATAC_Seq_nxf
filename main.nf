@@ -246,7 +246,7 @@ process fastqc {
     tag "$sampleID"
     label 'fastqc'
     publishDir "${sample_outdir}", pattern: "*_fastqc.*", mode: 'move'
-    cpus params.threads
+    cpus 2
 
     input:
     tuple sampleID, file(trimmedfqs) from trim_fastqc
@@ -256,7 +256,7 @@ process fastqc {
     script:
     log.info "-----FastQC running on ${sampleID}-----"
     """
-    fastqc -t ${params.threads} ${trimmedfqs[0]} ${trimmedfqs[1]}
+    /opt/bin/FastQC/fastqc -t 2 ${trimmedfqs[0]} ${trimmedfqs[1]}
     """
 }
 
